@@ -1,36 +1,7 @@
 #!/bin/bash
-
-#
-# Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License").
-# You may not use this file except in compliance with the License.
-# A copy of the License is located at
-#
-#  http://aws.amazon.com/apache2.0
-#
-# or in the "license" file accompanying this file. This file is distributed
-# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-# express or implied. See the License for the specific language governing
-# permissions and limitations under the License.
 # https://developer.amazon.com/en-US/docs/alexa/avs-device-sdk/raspberry-pi.html
 
-set -o errexit  # Exit the script if any statement fails.
-set -o nounset  # Exit the script if any uninitialized variable is used.
-
-scripts_dir="$(dirname "${BASH_SOURCE[0]}")"
-GIT_DIR="$(realpath $(dirname ${BASH_SOURCE[0]})/..)"
-
-# make sure we're running as the owner of the checkout directory
-RUN_AS="$(ls -ld "$scripts_dir" | awk 'NR==1 {print $3}')"
-if [ "$USER" != "$RUN_AS" ]
-then
-    echo "This script must run as $RUN_AS, trying to change user..."
-    exec sudo -u $RUN_AS $0
-fi
-clear
-
-HOME_PATH="/home/$USER"
+HOME_PATH="/home/pi"
 INSTALL_BASE="$HOME_PATH/Assistants/alexa"
 SOURCE_PATH="$INSTALL_BASE/sdk-source"
 BUILD_PATH="$INSTALL_BASE/sdk-build"
@@ -39,7 +10,6 @@ DB_PATH="$INSTALL_BASE/db"
 LOG_FOLDER="${INSTALL_BASE}/log"
 APP_NECESSITIES_PATH="$INSTALL_BASE/application-necessities"
 SOUNDS_PATH="$APP_NECESSITIES_PATH/sound-files"
-
 
 PORT_AUDIO_PATH="$THIRD_PARTY_PATH/portaudio"
 PORT_AUDIO_FILE="pa_stable_v190600_20161030.tgz";
@@ -104,7 +74,7 @@ clone_avs_device_sdk() {
   
   if [ ! -d "${AVS_DEVICE_SDK_PATH}" ]; then
   {
-    pushd $AVS_DEVICE_SDK_PATH
+    pushd $SOURCE_PATH
   
     #get sdk
     echo
@@ -137,7 +107,7 @@ clone_alexa_rpi() {
   }
   else
   {
-    pushd $ALEXA_RPI_PATH
+    pushd $THIRD_PARTY_PATH
 
     #get sensory and build
     echo

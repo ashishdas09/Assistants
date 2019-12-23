@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ALEXA_FOLDER="/home/$USER/Assistants/alexa"
+ALEXA_FOLDER="/home/pi/Assistants/alexa"
 LOG_FOLDER="${ALEXA_FOLDER}/log"
 
 _psName2Ids(){
