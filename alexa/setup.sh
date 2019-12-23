@@ -26,7 +26,7 @@ CMAKE_PLATFORM_SPECIFIC=(-DSENSORY_KEY_WORD_DETECTOR=ON \
     -DPORTAUDIO_LIB_PATH=$PORT_AUDIO_PATH/lib/.libs/libportaudio.a \
     -DPORTAUDIO_INCLUDE_DIR=$PORT_AUDIO_PATH/include)
 
-DEVICE_INFO=="${INSTALL_BASE}/deviceInfo.json"
+DEVICE_INFO_PATH="${INSTALL_BASE}/deviceInfo.json"
 AVS_DEVICE_SDK_INSTALL_PATH="${AVS_DEVICE_SDK_PATH}/tools/Install"
 GEN_CONFIG_FILE_PATH="${AVS_DEVICE_SDK_INSTALL_PATH}/genConfig.sh"
 CONFIG_FILE_PATH="${AVS_DEVICE_SDK_INSTALL_PATH}/config.json"
@@ -264,6 +264,7 @@ sudo mkdir -p $SOUNDS_PATH
 sudo mkdir -p $DB_PATH
 sudo mkdir -p $LOG_FOLDER
 
+rm -rf ${CONFIG_FILE_PATH}
 cat <<EOF >${CONFIG_FILE_PATH}
 {"deviceInfo":{"clientId":"${CLIENT_ID}","productId":"${PRODUCT_ID}"}}
 EOF
@@ -276,9 +277,12 @@ echo ""
 read -r -p "Enter the Description: " DEVICE_DESCRIPTION
 echo ""
 
-cat <<EOF >${DEVICE_INFO}
+rm -rf ${DEVICE_INFO_PATH}
+cat <<EOF >${DEVICE_INFO_PATH}
 {"clientId":"${CLIENT_ID}","productId":"${PRODUCT_ID}","serialNumber":"${DEVICE_SERIAL_NUMBER}","manufacturer":"${MANUFACTURER_NAME}","description":"${DEVICE_DESCRIPTION}"}
 EOF
+
+cat ${DEVICE_INFO_PATH}
 
 bash ${GEN_CONFIG_FILE_PATH} \
 ${CONFIG_FILE_PATH} \
@@ -300,7 +304,11 @@ echo
 echo "==============> Run and authorize  =============="
 echo
 
-PA_ALSA_PLUGHW=1 ${BUILD_PATH}/SampleApp/src/SampleApp ${ALEXA_CLIENT_SDK_CONFIG_PATH}
+PA_ALSA_PLUGHW=1 \
+${BUILD_PATH}/SampleApp/src/SampleApp \
+${ALEXA_CLIENT_SDK_CONFIG_PATH} \
+${ALEXA_RPI_PATH}/models \
+DEBUG9
 
 EOF
 
