@@ -1,0 +1,11 @@
+[Unit]
+Description=Amazon Alexa
+After=network.target network-online.target
+
+[Service]
+Type=forking
+ExecStart=/home/pi/Assistants/alexa/start.sh
+
+
+[Install]
+WantedBy=multi-user.target
